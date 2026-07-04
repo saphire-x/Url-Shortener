@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            color: #1a1a2e;
+        }
+
+        .container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 560px;
+            padding: 2rem;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            margin-bottom: 0.5rem;
+            color: #1a1a2e;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 1.75rem;
+            font-size: 0.95rem;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #374151;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            transition: border-color 0.2s;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button[type="submit"] {
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+
+        button[type="submit"]:hover {
+            opacity: 0.92;
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.98);
+        }
+
+        .result-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #f3f4f6;
+        }
+
+        .result-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #059669;
+        }
+
+        .result-card {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .result-row {
+            margin-bottom: 0.75rem;
+        }
+
+        .result-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .result-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+        }
+
+        .result-value {
+            font-size: 1rem;
+            word-break: break-all;
+        }
+
+        .short-url-link {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .short-url-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <p class="subtitle">Paste a long link and get a short, shareable URL instantly.</p>
+
+        <form action="/shorten" method="post">
+            <label for="originalUrl">URL to shorten</label>
+            <input type="url" id="originalUrl" name="originalUrl"
+                   placeholder="https://example.com/very/long/url"
+                   th:value="${result != null ? result.originalUrl : ''}"
+                   required>
+            <button type="submit">Shorten URL</button>
+        </form>
+
+        <div class="result-section" th:if="${result != null}">
+            <h2>Your short URL is ready</h2>
+            <div class="result-card">
+                <div class="result-row">
+                    <span class="result-label">Short URL</span>
+                    <a class="result-value short-url-link"
+                       th:href="${result.shortUrl}"
+                       th:text="${result.shortUrl}"></a>
+                </div>
+                <div class="result-row">
+                    <span class="result-label">Original URL</span>
+                    <span class="result-value" th:text="${result.originalUrl}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
