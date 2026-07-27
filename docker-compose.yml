@@ -1,0 +1,34 @@
+services:
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  app:
+    build: .
+    container_name: url-shortener
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      # allowPublicKeyRetrieval=true  → required for MySQL 8 caching_sha2_password
+      # useSSL=false                  → dev-friendly, avoids SSL cert errors
+      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/urlshortener?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: rootkK@123
+
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
