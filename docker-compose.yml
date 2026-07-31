@@ -32,3 +32,23 @@ services:
 
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
+
+    # Optional: uncomment to cap resources for cleaner `docker stats` diagnostics.
+    # Leave commented for normal use — don't want to accidentally throttle yourself.
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2'
+    #       memory: 1g
+
+  k6:
+    image: grafana/k6
+    container_name: k6
+    profiles: ["load-test"]   # only starts when explicitly requested, see usage below
+    depends_on:
+      - app
+    volumes:
+      - ./k6:/scripts
+    entrypoint: ["k6", "run", "/scripts/load-test.js"]
+    environment:
+      - BASE_URL=http://app:8080

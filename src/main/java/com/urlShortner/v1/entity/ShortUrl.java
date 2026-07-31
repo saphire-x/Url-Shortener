@@ -1,16 +1,8 @@
 package com.urlShortner.v1.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -32,8 +24,12 @@ public class ShortUrl implements Serializable {
     @Column(unique = true, nullable = false)
     private String shortUrl;
 
+    @Lob
     @Column(nullable = false)
     private String originalUrl;
+
+    @Column(name = "original_url_hash", unique = true, nullable = false, length = 64)
+    private String originalUrlHash;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
